@@ -6,7 +6,7 @@ import numpy as np
 df= pd.read_csv('/workspaces/Social_Development_Bank/data/sdb_loans.zip')
 
 #remove unnamed columns
-df.drop('Unnamed: 0', axis=1)
+df.drop('Unnamed: 0', axis=1, inplace=True)
 df = df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
 
 
@@ -105,6 +105,7 @@ df.replace("انثى", "أنثى", inplace=True)
 df.replace("MALE", "ذكر", inplace=True)
 
 #extracting the year and month
+df.date = pd.to_datetime(df.date)
 df["year"] = df.date.dt.year
 df["month"]= df.date.dt.month
 
@@ -168,5 +169,7 @@ def salary(sal):
 
 
 df.income = df.income.map(salary) 
+
+df.to_csv('data/sdb_loans_cleaned.csv')
 
 

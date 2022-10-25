@@ -5,89 +5,53 @@
 
 import pandas as pd
 import numpy as np
+import arabic_reshaper
+import matplotlib.pyplot as plt
+import seaborn as sns
+from bidi.algorithm import get_display
+
+#pip install python-bidi
+# %%
+df= pd.read_csv('/workspaces/Social_Development_Bank/data/sdb_loans_cleaned.zip')
+#%%
+x_labs = [ ]
+
+for item in df.loan_type.unique():
+    x_labs.append(get_display(arabic_reshaper.reshape(item)))
+# %%
+
+g_title=get_display(arabic_reshaper.reshape('الجنس'))
+
+g_labels=  [ ]
+for item in df.gender.unique():
+    g_labels.append(get_display(arabic_reshaper.reshape(item)))
+
+# %%
+# Initialize the figure
+f, ax = plt.subplots()
+sns.despine(bottom=True, left=True)
+
+# Show each observation with a scatterplot
+g=sns.stripplot(
+    data=df_mf, x="loan_type", y="loan_amount", hue="gender",
+    dodge=True, alpha=.01, zorder=1,jitter=True
+)
+plt.legend(title=g_title, loc='upper left', labels=g_labels)
+plt.ylim(0, 500000)
+g.set_xticklabels(x_labs)
+plt.xlabel(get_display(arabic_reshaper.reshape('تصنيف التمويل')))
+plt.ylabel(get_display(arabic_reshaper.reshape('مبلغ التمويل')))
+# %%
 
 # %%
 
-df= pd.read_csv('../data/sdb_loans.zip')
-# %%
-df.head()
-# %%
-
-print(df.city.unique())
-# %%
-def con_cities(city_name):
-    '''
-    Clean the city names by removing duplicates and fixing spleeing mistakes
-    '''
-    if "بنك التنمية الإجتماعية فرع " in city_name:
-        city_name = city_name.replace('بنك التنمية الإجتماعية فرع ','')
-    if "بنك التنمية الإجتماعية ب" in city_name:
-        city_name = city_name.replace("بنك التنمية الإجتماعية ب" ,'') # removing the repeated phrase
-    if 'ه' in city_name:
-        city_name = city_name.replace('ه','ة') # fixing spelling mistake
-    if "إ" in city_name:
-        city_name = city_name.replace('إ','أ')
-    if "ى" in city_name:
-        city_name = city_name.replace('ى','ي')
-    if "  " in city_name:
-        city_name =  city_name.replace('  ',' ')
-
-    if city_name == 'المدينة':
-        city_name = 'المدينة المنورة' # consistant name for Medina 
-    
-    if city_name == 'مكة':
-        city_name = 'مكة المكرمة' # consistant name for Makkah 
-    return city_name
-# %%
-df.city = df.city.map(con_cities)
-print(df.city.unique())
+df_mf= df[df.gender != 'غير معرف']
 
 # %%
-# Checking for the unique values.
-df.city.value_counts()
 
-
-# %%
-# Cleaning the loan_type
-df.loan_type.value_counts()
-
-
-
-# %%
-def con_types(loan_type):
-    '''
-    Cleaning the loan_type column
-    '''
-    if loan_type==  "حر":
-        loan_type=  "التمويل الحر"
-    if loan_type== "نقل":
-        loan_type = 'تمويل نقل'
-    
-    if loan_type == "مشروع":
-        loan_type = 'تمويل الاعمال' # From the loan_class, it seems that those two are the same
-    if loan_type== "إجتماعي":
-        loan_type = 'تمويل الافراد'# From the loan_class, it seems that those two are the same
-    return loan_type
-# %%
-df.loan_type  = df.loan_type.map(con_types)
-df.loan_type.value_counts()
-# %%
-print(df.groupby('loan_type').loan_class.value_counts())
-
-
-# %%
-len(df.loan_class.unique())
-# 44 differnet classes
-# %%
-def con_classes(loan_class):
-    '''
-    
-    '''
-    if  'قرض ' in loan_class:
-        loan_class=loan_class.replace('قرض ','')
-    return loan_class
-# %%
-df.loan_class = df.loan_class.map(con_classes)
-# %%
-df.loan_class.value_counts()
+df_mf= df[df.gender != 'غير معرف']
+sns.violinplot(data=df_mf,  x="loan_type", y="loan_amount", hue="gender",
+               split=True)
+sns.despine(left=True)
+plt.ylim(0, 500000)
 # %%
