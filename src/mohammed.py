@@ -10,10 +10,12 @@ def clean_job(job):
     # ask group about the retired grouping
     if job == 'غير محدد':
         job = 'غير معرف'
-    if job == 'موظف قطاع خاص':
+    elif job == 'موظف قطاع خاص':
         job = 'قطاع خاص'
-    if job == 'شركة حكومية' or job == 'موظف شركة حكومية' or job == 'موظف حكومي':
+    elif job == 'شركة حكومية' or job == 'موظف شركة حكومية' or job == 'موظف حكومي':
         job = 'قطاع حكومي'
+    # elif job == 'متقاعد تأمينات' or job == 'متقاعد حكومي':
+    #     job = 'متقاعد'
     return job
 # %%
 def clean_loan_amount(loan_amount):
