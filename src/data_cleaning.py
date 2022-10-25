@@ -7,7 +7,7 @@ df= pd.read_csv('/workspaces/Social_Development_Bank/data/sdb_loans.zip')
 
 #remove unnamed columns
 df.drop('Unnamed: 0', axis=1)
-
+df = df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
 
 
 def con_cities(city_name):
@@ -99,9 +99,17 @@ df.job = df.job.map(clean_job)
 
 
 # Dona
+#replacing english names
+df.replace("FEMALE", "أنثى", inplace=True)
+df.replace("انثى", "أنثى", inplace=True)
+df.replace("MALE", "ذكر", inplace=True)
 
+#extracting the year and month
+df["year"] = df.date.dt.year
+df["month"]= df.date.dt.month
 
-
+#filling Na in age or all
+df.fillna("غير معرف", inplace=True)
 
 
 # Noura
@@ -162,4 +170,3 @@ def salary(sal):
 df.income = df.income.map(salary) 
 
 
-df.head()
