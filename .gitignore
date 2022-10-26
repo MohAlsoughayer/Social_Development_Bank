@@ -1,1 +1,5 @@
 .devcontainer/
+
+/.luarc.json
+
+quarto-cli/

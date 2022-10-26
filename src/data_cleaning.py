@@ -60,8 +60,16 @@ def con_classes(loan_class):
     '''
     if  'قرض ' in loan_class:
         loan_class=loan_class.replace('قرض ','')
+    
+    if  'ناشيء' in loan_class:
+        loan_class='ناشيء'
+    if 'عربات' in loan_class:
+        loan_class='عربات البيع'
+    
+    
+    
     return loan_class
-
+    
 df.loan_class = df.loan_class.map(con_classes)
 
 # Mohammed cleaning
