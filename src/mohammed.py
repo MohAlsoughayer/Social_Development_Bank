@@ -39,10 +39,10 @@ df['loan_class'].value_counts()
 # %%
 df['loan_type'].value_counts()
 # %%
-freelance_female_sum = df[(df.loan_type == 'التمويل الحر') & (df.gender == 'أنثى')]['loan_amount'].sum()
-freelance_male_sum = df[(df.loan_type == 'التمويل الحر') & (df.gender == 'ذكر')]['loan_amount'].sum()
-personal_finance_female_sum = df[(df.loan_type == 'تمويل الافراد') & (df.gender == 'أنثى')]['loan_amount'].sum()
-personal_finance_male_sum = df[(df.loan_type == 'تمويل الافراد') & (df.gender == 'ذكر')]['loan_amount'].sum()
+freelance_female_sum = df[(df.loan_type == 'التمويل الحر') & (df.gender == 'النساء')]['loan_amount'].sum()
+freelance_male_sum = df[(df.loan_type == 'التمويل الحر') & (df.gender == 'الرجال')]['loan_amount'].sum()
+personal_finance_female_sum = df[(df.loan_type == 'تمويل الافراد') & (df.gender == 'النساء')]['loan_amount'].sum()
+personal_finance_male_sum = df[(df.loan_type == 'تمويل الافراد') & (df.gender == 'الرجال')]['loan_amount'].sum()
 # %%
 fig = px.histogram(df[(df.loan_type == 'التمويل الحر')], x='year',
              color='gender', barmode='group',
@@ -60,5 +60,15 @@ fig = px.histogram(df[(df.loan_type == 'تمويل الافراد')], x='year',
                      'gender': 'جنس العميل'
                      })
 fig.update_layout(yaxis_title='عدد التمويلات')
+fig.show()
+# %%
+df['year'].value_counts()
+# %%
+fig = px.box(df, x='loan_type', y = 'loan_amount',
+             animation_frame='year',
+             title='قيمة التمويل لكل تصنيف عبر السنين',
+             labels={'year': 'السنه',
+                     'loan_type': 'تصنيف التمويل',
+                     'loan_amount': 'قيمة التمويل'})
 fig.show()
 # %%
