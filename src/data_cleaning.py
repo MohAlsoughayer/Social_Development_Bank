@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 #import the data
-df= pd.read_csv('/workspaces/Social_Development_Bank/data/sdb_loans.zip')
+df= pd.read_csv('/Social_Development_Bank/data/sdb_loans.zip')
 
 #remove unnamed columns
 df.drop('Unnamed: 0', axis=1, inplace=True)
@@ -100,9 +100,9 @@ df.job = df.job.map(clean_job)
 
 # Dona
 #replacing english names
-df.replace("FEMALE", "أنثى", inplace=True)
-df.replace("انثى", "أنثى", inplace=True)
-df.replace("MALE", "ذكر", inplace=True)
+df.replace("FEMALE", "النساء", inplace=True)
+df.replace("انثى", "النساء", inplace=True)
+df.replace("MALE", "الرجال", inplace=True)
 
 #extracting the year and month
 df.date = pd.to_datetime(df.date)
@@ -171,5 +171,3 @@ def salary(sal):
 df.income = df.income.map(salary) 
 
 df.to_csv('data/sdb_loans_cleaned.csv')
-
-
