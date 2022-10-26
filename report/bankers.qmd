@@ -1,7 +1,9 @@
 ---
 title: "Social Development Bank"
 author: "Abdulelah, Dona, Mohammed, Noura"
-format: revealjs
+format:
+  revealjs: 
+    theme: sky
 ---
 
 ```{python}
@@ -17,28 +19,73 @@ import plotly.express as px
 df= pd.read_csv('../data/sdb_loans_cleaned.zip')
 
 ```
+# Introduction 
+
 ## Background 
-SDB background
+- Social Development Bank provides loans to underprivileged citizens.
+- Four types of loan:
+    - Personal: Weddings, family, and construction
+    - Business: Small businesses, communication
+    - Freelance: Cash, transportation  
+    - Transportation: Taxis, school transportation
+
 
 ## Data source 
--Open
+- The Open Data portal of Saudi Arabia
+    - https://data.gov.sa
+    - An intiative to share govt. data with citizens
+    - Aim to expand the Saudi e-goverment services
+
+
 ## Documentaiton and Version conrtol
+- Github as our version control platform; Each member as contributor
+
+- Separated the cleaning and EDA between each member in separate files
+
 
 
 ## Data Munging
+- The data was collected form 2015 to mid 2022.
+    - Missing data from 2019 (The data was published in July 3, 2019) 
 
-## Quality of the data
+- The data from different years were combined into one Data Frame
+
+- 14 columns
+
+- More than 1,000,000 rows
 
 
+## Data Cleaning 
+- Some years had different naming conventions.
+    - Example: 'مكة المكرمة' or 'مكة'
 
-## Loans per gender
+- Some columns had different types of data 
+
+- Some years had missing columns.
+    - Example: 2021 had no saving_laon column.
+
+- Missing data were replaced with 'غير معرف' 
+
+# EDA
+
+##
+- Who takes the most loans? (Number and amount)
+    - Gender.
+    - Age.
+    - City.
+
+- How did that change over the last 7 years?
+
+- What are the types of loans? 
+
+## Gender loan comparison 
 
 ```{python}
 
 sns.set(rc={'figure.figsize':(10,7)})
 
 # Graph the gender vs sum
-bar_labels=[ 'ﺀﺎﺴﻨﻟﺍ','ﻝﺎﺟﺮﻟﺍ', 'ﻑﺮﻌﻣ ﺮﻴﻏ']
+bar_labels=['ﻝﺎﺟﺮﻟﺍ', 'ﺀﺎﺴﻨﻟﺍ', 'ﻑﺮﻌﻣ ﺮﻴﻏ']
 
 
 g1= sns.barplot(y=bar_labels,x=df.groupby('gender').loan_amount.sum())
@@ -51,7 +98,7 @@ g1.set_xticklabels(['0','10','20','30','40']);
 ```
 
 
-## Loans per gender
+## Gender loan comparison over the years
 ```{python}
 
 
@@ -68,92 +115,8 @@ fig.show()
 
 ```
 
-## Loans per gender (excluding the wedding loan)
 
-```{python}
-# graphing without the wedding laon
-df_mrgless= df[df.loan_class != 'زواج']
-bar_labels=[ 'ﺀﺎﺴﻨﻟﺍ','ﻝﺎﺟﺮﻟﺍ', 'ﻑﺮﻌﻣ ﺮﻴﻏ']
-g11= sns.barplot(y=bar_labels,x=df_mrgless.groupby('gender').loan_amount.sum())
-plt.ylabel(get_display(arabic_reshaper.reshape('الصنف')))
-plt.xlabel(get_display(arabic_reshaper.reshape(('مجموع مبلغ التمويل (مليار ريال)'))))
-g11.set_xticklabels(['5','10','15','20','25']);
-```
-
-
-
-## Percentage of weddings' loans 
-
-- The percentage of weddings laons 
-```{python}
-mrg_percent= df[df.loan_class == 'زواج'].loan_amount.sum()/df.loan_amount.sum()
-mrg_percent=round(mrg_percent*100,2)
-print(mrg_percent,'%')
-```
-- Since 2015, SDB gave for weddings loans:
-```{python}
-sum_w=round(df[df.loan_class == 'زواج'].loan_amount.sum()/10**9,2)
-print(sum_w, 'billions SAR')
-```
-
-##
-
-
-
-## Loans amount per type
-
-```{python}
-y_labels2=['ﺮﺤﻟﺍ ﻞﻳﻮﻤﺘﻟﺍ', 'ﻝﺎﻤﻋﻻﺍ ﻞﻳﻮﻤﺗ', 'ﺩﺍﺮﻓﻻﺍ ﻞﻳﻮﻤﺗ', 'ﻞﻘﻧ ﻞﻳﻮﻤﺗ']
-x2=df.groupby('loan_type').loan_amount.sum()
-g2= sns.barplot(x=x2, y=y_labels2)
-plt.ylabel(get_display(arabic_reshaper.reshape('الصنف')))
-plt.xlabel(get_display(arabic_reshaper.reshape('مجموع مبلغ التمويل (مليار ريال)')))
-g2.set_xticklabels(['0','10','20','30','40']);
-
-
-
-
-```
-## Loans number per type
-```{python}
-
-# graph the type vs. counts
-y_labels22=[ 'ﺩﺍﺮﻓﻻﺍ ﻞﻳﻮﻤﺗ','ﺮﺤﻟﺍ ﻞﻳﻮﻤﺘﻟﺍ', 'ﻝﺎﻤﻋﻻﺍ ﻞﻳﻮﻤﺗ','ﻞﻘﻧ ﻞﻳﻮﻤﺗ']
-x2=df.loan_type.value_counts()
-g22= sns.barplot(x=x2, y=y_labels22)
-plt.ylabel(get_display(arabic_reshaper.reshape('الصنف')))
-plt.xlabel(get_display(arabic_reshaper.reshape('عدد القروض')));
-
-```
-
-## Loan amount per age group
-
-```{python}
-x3=df.groupby('age').loan_amount.sum()
-ticks_label=['<30','30-40','40-60','>60','ﻑﺮﻌﻣ ﺮﻴﻏ']
-g3= sns.barplot(x=x3, y=x3.index);
-plt.ylabel(get_display(arabic_reshaper.reshape('العمر')));
-plt.xlabel(get_display(arabic_reshaper.reshape('مجموع مبلغ التمويل (مليار ريال)')));
-g3.set_yticklabels(ticks_label);
-g3.set_xticklabels(['0','5','10','15','20']);
-```
-
-## Loans number per age
-
-```{python}
-#graph the age vs counts
-x33=df.age.value_counts()
-ticks_label=['<30','30-40','40-60','>60','ﻑﺮﻌﻣ ﺮﻴﻏ']
-g33= sns.barplot(x=x33, y=x33.index);
-plt.ylabel(get_display(arabic_reshaper.reshape('العمر')));
-plt.xlabel(get_display(arabic_reshaper.reshape('عدد القروض')));
-g33.set_yticklabels(ticks_label);
-
-```
-
-
-
-## freelance loans per gender 
+## Freelance loans per gender 
 ```{python}
 fig = px.histogram(df[(df.loan_type == 'التمويل الحر')], x='year',
              color='gender', barmode='group',
@@ -176,10 +139,160 @@ fig = px.histogram(df[(df.loan_type == 'تمويل الافراد')], x='year',
              labels={'year': 'السنه',
                      'gender': 'جنس العميل'
                      })
+            
 fig.update_layout(yaxis_title='عدد التمويلات')
 fig.show()
 
 ```
-## Data PI 
 
-## Conclusion 
+## Loans average per gender over the years
+
+```{python}
+g_title=get_display(arabic_reshaper.reshape('الجنس'))
+avgyg=df.groupby(["year","gender"]).loan_amount.mean()
+df_avgyg=pd.DataFrame(avgyg)
+new_df=df_avgyg.reset_index()
+new_df= new_df[new_df.gender != 'غير معرف']
+
+timelinebar= sns.lineplot(x="year", y="loan_amount",data=new_df, hue= "gender")
+plt.legend(title=g_title, loc='upper left', labels=[ 'ﻝﺎﺟﺮﻟﺍ','ﺀﺎﺴﻨﻟﺍ' ])
+plt.xlabel(get_display(arabic_reshaper.reshape('سنة التمويل')))
+plt.ylabel(get_display(arabic_reshaper.reshape('مبلغ التمويل')));
+
+```
+
+## Loans per gender (excluding wedding loans)
+
+```{python}
+# graphing without wedding laon
+df_mrgless= df[df.loan_class != 'زواج']
+bar_labels=['ﻝﺎﺟﺮﻟﺍ', 'ﺀﺎﺴﻨﻟﺍ', 'ﻑﺮﻌﻣ ﺮﻴﻏ']
+g11= sns.barplot(y=bar_labels,x=df_mrgless.groupby('gender').loan_amount.sum())
+plt.ylabel(get_display(arabic_reshaper.reshape('الصنف')))
+plt.xlabel(get_display(arabic_reshaper.reshape(('مجموع مبلغ التمويل (مليار ريال)'))))
+g11.set_xticklabels(['5','10','15','20','25']);
+```
+
+
+
+## Percentage of wedding loans 
+
+- The percentage of wedding laons:
+```{python}
+mrg_percent= df[df.loan_class == 'زواج'].loan_amount.sum()/df.loan_amount.sum()
+mrg_percent=round(mrg_percent*100,2)
+print(mrg_percent,'%')
+```
+- Wedding loans given by SDB since 2015:
+```{python}
+sum_w=round(df[df.loan_class == 'زواج'].loan_amount.sum()/10**9,2)
+print(sum_w, 'billions SAR')
+```
+
+
+
+
+## Type loan comparison 
+
+
+```{python}
+
+# graph the type vs. counts
+y_labels22=[ 'ﺩﺍﺮﻓﻻﺍ ﻞﻳﻮﻤﺗ','ﺮﺤﻟﺍ ﻞﻳﻮﻤﺘﻟﺍ', 'ﻝﺎﻤﻋﻻﺍ ﻞﻳﻮﻤﺗ','ﻞﻘﻧ ﻞﻳﻮﻤﺗ']
+x2=df.loan_type.value_counts()
+g22= sns.barplot(x=x2, y=y_labels22)
+plt.ylabel(get_display(arabic_reshaper.reshape('الصنف')))
+plt.xlabel(get_display(arabic_reshaper.reshape('عدد القروض')));
+
+```
+
+
+## Transportation loans per city 
+```{python}
+
+fig = px.histogram(df[(df.loan_type == 'تمويل نقل')], x="city", animation_frame= "year",
+ title="عدد قروض (تمويل النقل)",
+labels= {'city':'المدينه',
+        'loan_type':'نوع القرض'})
+fig.update_layout(yaxis_title= 'عدد القروض')
+fig.show()
+
+```
+
+
+## Business loans per city 
+```{python}
+fig = px.histogram(df[(df.loan_type == 'تمويل الاعمال')], x="city", animation_frame= "year",
+ title="عدد قروض (تمويل الاعمال)",
+labels= {'city':'المدينه',
+        'loan_type':'نوع القرض'})
+fig.update_layout(yaxis_title= 'عدد القروض',yaxis_range=[0,650])
+fig.show()
+```
+
+## Personal loans per city
+```{python}
+fig = px.histogram(df[(df.loan_type == 'تمويل الافراد')], x="city", animation_frame= "year",
+ title="عدد قروض (تمويل الافراد)",
+labels= {'city':'المدينه',
+        'loan_type':'نوع القرض'})
+fig.update_layout(yaxis_title= 'عدد القروض')
+fig.show()
+
+```
+
+## Freelance loans per city 
+
+```{python}
+
+fig = px.histogram(df[(df.loan_type == 'التمويل الحر')], x="city", animation_frame= "year",
+ title="عدد قروض (التمويل الحر)",
+labels= {'city':'المدينه',
+        'loan_type':'نوع القرض'})
+fig.update_layout(yaxis_title= 'عدد القروض')
+
+```
+
+
+
+
+
+## Loan amount per age group 
+
+```{python}
+x3=df.groupby('age').loan_amount.sum()
+ticks_label=['<30','30-40','40-60','>60','ﻑﺮﻌﻣ ﺮﻴﻏ']
+g3= sns.barplot(x=x3, y=x3.index);
+plt.ylabel(get_display(arabic_reshaper.reshape('العمر')));
+plt.xlabel(get_display(arabic_reshaper.reshape('مجموع مبلغ التمويل (مليار ريال)')));
+g3.set_yticklabels(ticks_label);
+g3.set_xticklabels(['0','5','10','15','20']);
+```
+
+## Loans number per age group
+
+```{python}
+#graph the age vs counts
+x33=df.age.value_counts()
+ticks_label=['<30','30-40','40-60','>60','ﻑﺮﻌﻣ ﺮﻴﻏ']
+g33= sns.barplot(x=x33, y=x33.index);
+plt.ylabel(get_display(arabic_reshaper.reshape('العمر')));
+plt.xlabel(get_display(arabic_reshaper.reshape('عدد القروض')));
+g33.set_yticklabels(ticks_label);
+
+```
+
+
+
+
+## Summary 
+- Alomst 40% of all loan amounts are given for weddings.
+- Even without the weddings' loans, Men take more loans.
+- Women take (on average) larger loan amounts.
+- The gap between men and women (number of loans) is getting smaller as time passes.
+
+## Summary
+- Most loans are personal 
+- Riyadh and other big cities get more loans 
+- Citizens younger than 30 have the highest number of loans while 30-40 have the largest total amount  
+
