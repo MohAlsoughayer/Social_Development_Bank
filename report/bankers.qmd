@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from bidi.algorithm import get_display
 import plotly.express as px
-df= pd.read_csv('../data/sdb_loans_cleaned.zip')
+df= pd.read_csv('sdb_loans_cleaned.zip')
 
 ```
 # Introduction 
@@ -145,7 +145,7 @@ fig.show()
 
 ```
 
-## Loans average per gender over the years
+## Loans average over the years
 
 ```{python}
 g_title=get_display(arabic_reshaper.reshape('الجنس'))
@@ -155,13 +155,13 @@ new_df=df_avgyg.reset_index()
 new_df= new_df[new_df.gender != 'غير معرف']
 
 timelinebar= sns.lineplot(x="year", y="loan_amount",data=new_df, hue= "gender")
-plt.legend(title=g_title, loc='upper left', labels=[ 'ﻝﺎﺟﺮﻟﺍ','ﺀﺎﺴﻨﻟﺍ' ])
+plt.legend(labels=['ﻝﺎﺟﺮﻟﺍ','ﺀﺎﺴﻨﻟﺍ' ])
 plt.xlabel(get_display(arabic_reshaper.reshape('سنة التمويل')))
 plt.ylabel(get_display(arabic_reshaper.reshape('مبلغ التمويل')));
 
 ```
 
-## Loans per gender (excluding wedding loans)
+## Gender loans w/o wedding
 
 ```{python}
 # graphing without wedding laon

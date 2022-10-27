@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 #import the data
-df= pd.read_csv('/Social_Development_Bank/data/sdb_loans.zip')
+df= pd.read_csv('data/sdb_loans.zip')
 
 #remove unnamed columns
 df.drop('Unnamed: 0', axis=1, inplace=True)
@@ -111,6 +111,8 @@ df.job = df.job.map(clean_job)
 df.replace("FEMALE", "النساء", inplace=True)
 df.replace("انثى", "النساء", inplace=True)
 df.replace("MALE", "الرجال", inplace=True)
+df.replace("أنثى", "النساء", inplace=True)
+df.replace("ذكر", "الرجال", inplace=True)
 
 #extracting the year and month
 df.date = pd.to_datetime(df.date)
