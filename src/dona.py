@@ -152,12 +152,6 @@ for item in df.loan_type.unique():
 sns.barplot(x="year", y="loan_type", data=df)
 
 
-
-
-
-
-
-
 # %%
 #df["year"].unique()
 #!pip install arabic_reshaper
@@ -165,3 +159,44 @@ sns.barplot(x="year", y="loan_type", data=df)
 
 # %%
 
+# %%
+
+fig = px.histogram(df[(df.loan_type == 'تمويل نقل')], x="city", animation_frame= "year",
+ title="عدد قروض (تمويل النقل)",
+labels= {'city':'المدينه',
+        'loan_type':'نوع القرض'})
+fig.update_layout(yaxis_title= 'عدد القروض')
+fig.show()
+
+
+# %%
+df[(df.loan_type == 'تمويل نقل')]["city"].unique()
+# %%
+
+fig = px.histogram(df[(df.loan_type == 'تمويل الاعمال')], x="city", animation_frame= "year",
+ title="عدد قروض (تمويل الاعمال)",
+labels= {'city':'المدينه',
+        'loan_type':'نوع القرض'})
+fig.update_layout(yaxis_title= 'عدد القروض')
+fig.show()
+fig.update_layout(yaxis_range=[0,650])
+
+
+# %%
+fig = px.histogram(df[(df.loan_type == 'تمويل الافراد')], x="city", animation_frame= "year",
+ title="عدد قروض (تمويل الافراد)",
+labels= {'city':'المدينه',
+        'loan_type':'نوع القرض'})
+fig.update_layout(yaxis_title= 'عدد القروض')
+fig.show()
+
+#%%
+fig = px.histogram(df[(df.loan_type == 'التمويل الحر')], x="city", animation_frame= "year",
+ title="عدد قروض (التمويل الحر)",
+labels= {'city':'المدينه',
+        'loan_type':'نوع القرض'})
+fig.update_layout(yaxis_title= 'عدد القروض')
+
+
+
+fig.show()
